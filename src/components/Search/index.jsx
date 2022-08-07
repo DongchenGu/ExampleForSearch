@@ -7,12 +7,17 @@ export default class Search extends React.Component{
         //获取用户的输入
         const {keywordElement:{value: keyword}}=  this;
         console.log(keyword);
+        //发送请求前通知APP更新状态
+        this.props.updateAppState({isFirst:false,isLoading: true});
         //发送网路请求
         axios.get(`http://api.github.com/search/users?q=${keyword}`).then(
             response => {
-                this.props.saveUsers(response.data.items);
+                //请求成功后通知app更新状态
+                this.props.updateAppState({users:response.data.items,isLoading:false});
             },
-            error => {console.log("失败了",error);}
+            error => {
+                //请求失败后通知APP更新状态
+                this.props.updateAppState({err:error.message,isLoading:false}); }
         )
 
     }

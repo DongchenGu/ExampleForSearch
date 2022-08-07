@@ -5,10 +5,15 @@ import "./index.css"
 export default class List extends React.Component{
 
     render(){
+        const{users,isFirst,isLoading,err} = this.props
         return(                   
                 <div className="row">
                 {
-                    this.props.users.map(
+                    isFirst? <h2>input the keyword，then search the results </h2>: 
+                    isLoading? <h2>Loading~~~~~ </h2>: 
+                    err? <h2 style={{color: "red"}}>{err}</h2>: 
+                    
+                    users.map(
                         (userObj)=>{
                             return (
                                 <div key={userObj.id} className="card">
