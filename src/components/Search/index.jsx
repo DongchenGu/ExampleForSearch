@@ -12,17 +12,20 @@ export default class Search extends React.Component{
         console.log(keyword);
         //发送请求前通知List更新状态\
         PubSub.publish('message', {isFirst:false,isLoading: true})
-        //发送网路请求
-        axios.get(`http://api.github.com/search/users?q=${keyword}`).then(
-            response => {
-                //请求成功后通知List更新状态
-                PubSub.publish('message', {users:response.data.items,isLoading:false})
-            },
-            error => {
-                //请求失败后通知List更新状态
+        //使用fetch发送网路请求
+        fetch(`http://api.github.com/search/users?q=${keyword}`).then(
+            //联系服务器成功
+            response=>{return response.json();},
+            error =>{return new Promise(()=>{}); }
+        ).then(
+            response=>{//获取数据成功
+                PubSub.publish('message', {users:response.items,isLoading:false})},
+            error =>{
+                //获取数据失败后通知List更新状态
                 PubSub.publish('message', {err:error.message,isLoading:false})}
-
         )
+                
+        
 
     }
 
